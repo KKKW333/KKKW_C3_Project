@@ -8,19 +8,17 @@ public class RestaurantService {
     public Restaurant findRestaurantByName(String restaurantName) throws restaurantNotFoundException {
 
         for(Restaurant restaurant: restaurants) {
-            if(restaurant.getName().equals(restaurantName))
+            if(restaurant.getName().equals(restaurantName)) {
                 return restaurant;
+            }
         }
-         throw new restaurantNotFoundException("there is no restaurant you find.");
-        //return null;
+        throw new restaurantNotFoundException("there is no restaurant you find.");
+        // return null;
         //DELETE ABOVE STATEMENT AND WRITE CODE HERE
     }
-    public int ordered_total(List<Item> order_items){
-        int total=0;
-        for(Item item:order_items){
-            total+=item.getPrice();
-        }
-        return  total;
+    public Restaurant addRestaurant(Restaurant newRestaurant) {
+        restaurants.add(newRestaurant);
+        return newRestaurant;
     }
 
     public Restaurant addRestaurant(String name, String location, LocalTime openingTime, LocalTime closingTime) {
@@ -37,5 +35,14 @@ public class RestaurantService {
 
     public List<Restaurant> getRestaurants() {
         return restaurants;
+    }
+
+
+    public int ordered_total(List<Item> order_items){
+        int total=0;
+        for(Item item:order_items){
+            total+=item.getPrice();
+        }
+        return  total;
     }
 }

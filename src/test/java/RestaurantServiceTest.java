@@ -11,7 +11,7 @@ import java.util.List;
 
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.hamcrest.MatcherAssert.assertThat;
+
 
 
 @ExtendWith(MockitoExtension.class)
@@ -26,7 +26,7 @@ class RestaurantServiceTest {
         LocalTime openingTime = LocalTime.parse("10:30:00");
         LocalTime closingTime = LocalTime.parse("22:00:00");
         restaurant =new Restaurant("Amelie's cafe","Chennai",openingTime,closingTime);
-
+        service.addRestaurant(restaurant);
         restaurant.addToMenu("Sweet corn soup",119);
         restaurant.addToMenu("Vegetable lasagne", 269);
         restaurant.addToMenu("Noddle", 319);
@@ -45,10 +45,9 @@ class RestaurantServiceTest {
     //>>>>>>>>>>>>>>>>>>>>>>SEARCHING<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     @Test
     public void searching_for_existing_restaurant_should_return_expected_restaurant_object() throws restaurantNotFoundException {
-        LocalTime openingTime = LocalTime.parse("10:30:00");
-        LocalTime closingTime = LocalTime.parse("22:00:00");
-        restaurant = service.addRestaurant("Amelie's cafe","Chennai",openingTime,closingTime);
-        Restaurant res=service.findRestaurantByName("Amelie's cafe");
+        service.getRestaurants().get(0).displayDetails();
+        String ss=service.getRestaurants().get(0).getName();
+        Restaurant res=service.findRestaurantByName(ss);
         res.equals(restaurant);
         //WRITE UNIT TEST CASE HERE
     }
@@ -56,11 +55,7 @@ class RestaurantServiceTest {
     //You may watch the video by Muthukumaran on how to write exceptions in Course 3: Testing and Version control: Optional content
     @Test
     public void searching_for_non_existing_restaurant_should_throw_exception() throws restaurantNotFoundException {
-        LocalTime openingTime = LocalTime.parse("10:30:00");
-        LocalTime closingTime = LocalTime.parse("22:00:00");
-        restaurant = service.addRestaurant("Amelie's cafe","Chennai",openingTime,closingTime);
-        restaurant.addToMenu("Sweet corn soup",119);
-        restaurant.addToMenu("Vegetable lasagne", 269);
+
         assertThrows(restaurantNotFoundException.class,()->service.findRestaurantByName("abc"));
 
     }
@@ -72,11 +67,7 @@ class RestaurantServiceTest {
     //>>>>>>>>>>>>>>>>>>>>>>ADMIN: ADDING & REMOVING RESTAURANTS<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     @Test
     public void remove_restaurant_should_reduce_list_of_restaurants_size_by_1() throws restaurantNotFoundException {
-        LocalTime openingTime = LocalTime.parse("10:30:00");
-        LocalTime closingTime = LocalTime.parse("22:00:00");
-        restaurant = service.addRestaurant("Amelie's cafe","Chennai",openingTime,closingTime);
-        restaurant.addToMenu("Sweet corn soup",119);
-        restaurant.addToMenu("Vegetable lasagne", 269);
+
 
         int initialNumberOfRestaurants = service.getRestaurants().size();
         service.removeRestaurant("Amelie's cafe");
@@ -85,32 +76,25 @@ class RestaurantServiceTest {
 
     @Test
     public void removing_restaurant_that_does_not_exist_should_throw_exception() throws restaurantNotFoundException {
-        LocalTime openingTime = LocalTime.parse("10:30:00");
-        LocalTime closingTime = LocalTime.parse("22:00:00");
-        restaurant = service.addRestaurant("Amelie's cafe","Chennai",openingTime,closingTime);
-        restaurant.addToMenu("Sweet corn soup",119);
-        restaurant.addToMenu("Vegetable lasagne", 269);
+
         assertThrows(restaurantNotFoundException.class,()->service.removeRestaurant("Pantry d'or"));
     }
 
     @Test
     public void add_restaurant_should_increase_list_of_restaurants_size_by_1(){
-        LocalTime openingTime = LocalTime.parse("10:30:00");
-        LocalTime closingTime = LocalTime.parse("22:00:00");
-        restaurant = service.addRestaurant("Amelie's cafe","Chennai",openingTime,closingTime);
-        restaurant.addToMenu("Sweet corn soup",119);
-        restaurant.addToMenu("Vegetable lasagne", 269);
+
 
         int initialNumberOfRestaurants = service.getRestaurants().size();
         service.addRestaurant("Pumpkin Tales","Chennai",LocalTime.parse("12:00:00"),LocalTime.parse("23:00:00"));
         assertEquals(initialNumberOfRestaurants + 1,service.getRestaurants().size());
     }
     //<<<<<<<<<<<<<<<<<<<<ADMIN: ADDING & REMOVING RESTAURANTS>>>>>>>>>>>>>>>>>>>>>>>>>>
+
     @Test
     public void get_price_according_to_the_ordered_item(){
         Item item=restaurant.findItemByName("Sweet corn soup");
-        assertEquals(0,item.getPrice());
-
+        assertNotEquals(0,item.getPrice());
+        assertEquals(119, item.getPrice());
     }
 
     @Test
@@ -120,12 +104,14 @@ class RestaurantServiceTest {
     @Test
     public void test_for_adding_total_price_all_ordered_items(){
 
-        assertEquals(438, order_items.get(0).getPrice()+order_items.get(0).getPrice());
-
+        //assertEquals(438, order_items.get(0).getPrice()+order_items.get(0).getPrice());
+        assertEquals(438, order_items.get(0).getPrice()+order_items.get(1).getPrice());
     }
     @Test
     public void check_ordered_total_method_return_the_total_amount_correctly(){
         int total=service.ordered_total(order_items);
-        assertEquals(0, total);
+        assertEquals(438, total);
     }
+
+
 }
