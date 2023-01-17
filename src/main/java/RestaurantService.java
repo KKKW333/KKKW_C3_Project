@@ -15,7 +15,13 @@ public class RestaurantService {
         //return null;
         //DELETE ABOVE STATEMENT AND WRITE CODE HERE
     }
-
+    public int ordered_total(List<Item> order_items){
+        int total=0;
+        for(Item item:order_items){
+            total+=item.getPrice();
+        }
+        return  total;
+    }
 
     public Restaurant addRestaurant(String name, String location, LocalTime openingTime, LocalTime closingTime) {
         Restaurant newRestaurant = new Restaurant(name, location, openingTime, closingTime);
